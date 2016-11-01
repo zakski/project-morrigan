@@ -13,25 +13,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.szadowsz.maeve.core.instruction.target.multi.feeder
+package com.szadowsz.common.io.write
 
-import com.szadowsz.maeve.core.instruction.target.multi.MultiTarget
+import org.supercsv.io.CsvListWriter
+import org.supercsv.prefs.CsvPreference
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.JavaConverters._
 
 /**
-  * Trait for the scenario in which we need to add to the target sequence mid run.
-  *
-  * Created on 18/10/2016.
+  * Created on 30/05/2016.
   */
-trait FeederTarget[T <: Any,P <: FeederTarget[T,P]] extends MultiTarget[T,P] {
+class CsvWriter(path: String, encoding: String, append: Boolean, pref: CsvPreference = CsvPreference.STANDARD_PREFERENCE)
+  extends CsvListWriter(new FWriter(path, append, encoding), pref) {
 
-  override val seq: ArrayBuffer[T]
 
-  /**
-    * Method to add a value to the end of the queue
-    *
-    * @param value the added value
-    */
-  def addToQueue(value : T) : Unit = seq += value
+  def write(columns: Seq[String]): Unit = write(columns.asJava)
+
+  def writeAll(rows: Seq[Seq[String]]): Unit = rows.foreach(write)
+
 }
