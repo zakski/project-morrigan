@@ -13,4 +13,16 @@ public enum Gender {
     Gender(String... syns) {
         synonyms = syns;
     }
+
+    @Override
+    public String toString() {
+        switch (this){
+            case BOY:
+                return "m";
+            case GIRL:
+                return "f";
+            default:
+                return "";
+        }
+    }
 }

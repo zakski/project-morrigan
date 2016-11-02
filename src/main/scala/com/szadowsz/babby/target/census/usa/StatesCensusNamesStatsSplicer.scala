@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory
 import scala.collection.mutable
 
 /**
-  * Rendered Necessary Unfortunately.
-  *
   * Created on 19/10/2016.
   */
 object StatesCensusNamesStatsSplicer {
