@@ -13,7 +13,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.szadowsz.babby.target.web.bnamewizard
+package com.szadowsz.babby.target.web.behindthename
 
 import java.io.File
 
@@ -33,27 +33,27 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created on 05/06/2015.
   */
-object BabyNamesWizardScraper {
+object BehindTheNameFirstScraper {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  private val urlBase = Uri("http://www.babynamewizard.com/baby-name/")
-  private val target = PathTarget(urlBase,('a' to 'z').toSeq.map(_.toString))
+  private val urlBase = Uri("http://www.behindthename.com/names/letter/")
+  private val target = PathTarget(urlBase, ('a' to 'z').flatMap(c => (1 to 8).map(i => c+"/"+ i)))
   private val conf = MaeveConf().setJavaScriptEnabled(false).setThrowExceptionOnScriptError(false).setHTTPProxy("proxy",8080,Nil)
 
 
   def main(args : Array[String]): Unit = {
     val scraper = new MaeveDriver(conf)
     scraper.setRecoveryDirectory("./recovery/")
-    val filter = new BNWizNamePageExtractor()
+    val filter = new BehindTheNamePageExtractor()
     val actions = new WaitExecutor(2000) // try not throttle the website
 
-    val instruction1 = MaeveInstruction("babynamewizard", target, actions, filter, "./data/web/babynamewizard/", true, true)
+    val instruction1 = MaeveInstruction("behindthenameFirst", target, actions, filter, "./data/web/behindthename/", true, true)
 
 
     scraper.feedInstruction(instruction1)
     scraper.scrapeUsingCurrInstruction()
 
-    val urlFiles = FileFinder.search("./data/web/babynamewizard/", Option(new ExtensionFilter(".txt",false)))
+    val urlFiles = FileFinder.search("./data/web/behindthename/", Option(new ExtensionFilter(".txt",false)))
 
     val urls = urlFiles.flatMap { f =>
       val read = new FReader(f.getAbsolutePath)
@@ -66,13 +66,14 @@ object BabyNamesWizardScraper {
       } while (l.isDefined)
       buff.toList.distinct
     }
-    val target2 = RelativeUriTarget(Uri("http://www.babynamewizard.com/"),urls.map(Uri(_)))
-    val instruction2 = MaeveInstruction("babynamewizardnames", target2, actions, new BNWizNameDataExtractor, "./data/web/babynamewizard/", true, true)
+    val target2 = PathTarget(Uri("http://www.behindthename.com/"),urls)
+    val filter2 =  new BehindTheNameFirstDataExtractor
+    val instruction2 = MaeveInstruction("behindthenameFirstnames", target2, actions, filter2, "./data/web/behindthename/", true, true)
 
     scraper.feedInstruction(instruction2)
     scraper.scrapeUsingCurrInstruction()
     urlFiles.foreach(_.delete())
 
-  //  ZipperUtil.zip(new File("./data/web/babynamewizard/babynamewizardnames.csv"),new File("./archives/web/babynamewizard/"))
+//    ZipperUtil.zip(new File("./data/web/babynamewizard/behindthenameFirstnames.csv"),new File("./archives/web/behindthename/"))
   }
 }

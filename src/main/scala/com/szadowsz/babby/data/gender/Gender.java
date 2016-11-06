@@ -5,7 +5,7 @@ package com.szadowsz.babby.data.gender;
  */
 public enum Gender {
 
-    BOY("boy","male","m"), GIRL("girl","female","f"), BOTH("both","either");
+    BOY("m","boy","male","masculine"), GIRL("f","girl","female","f","feminine"), BOTH("","both","either");
 
 
     final String[] synonyms;
@@ -16,13 +16,6 @@ public enum Gender {
 
     @Override
     public String toString() {
-        switch (this){
-            case BOY:
-                return "m";
-            case GIRL:
-                return "f";
-            default:
-                return "";
-        }
+        return synonyms[0];
     }
 }
