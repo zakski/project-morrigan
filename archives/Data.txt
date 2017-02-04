@@ -1,0 +1,8 @@
+scottish first names - https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/vital-events/names/babies-first-names
+scottish surnames - https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/vital-events/names/most-common-surnames-in-birth-marriage-and-death-registers
+england and wales first names (1904-2014) - http://webarchive.nationalarchives.gov.uk/20160105160709/http://ons.gov.uk/ons/rel/vsob1/baby-names--england-and-wales/index.html
+england and wales first names (2011-2015) - https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/livebirths/bulletins/babynamesenglandandwales/previousReleases
+northern ireland first names - http://www.nisra.gov.uk/demography/default.asp28.htm
+us baby names (nat lvl) - https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data
+us baby names (state lvl) - https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-data-by-state-and-district-of-
+british columbia names - http://www2.gov.bc.ca/gov/content/life-events/statistics-reports/bc-s-most-popular-baby-names

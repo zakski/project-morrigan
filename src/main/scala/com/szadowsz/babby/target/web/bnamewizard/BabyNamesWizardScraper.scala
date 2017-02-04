@@ -38,7 +38,7 @@ object BabyNamesWizardScraper {
 
   private val urlBase = Uri("http://www.babynamewizard.com/baby-name/")
   private val target = PathTarget(urlBase,('a' to 'z').toSeq.map(_.toString))
-  private val conf = MaeveConf().setJavaScriptEnabled(false).setThrowExceptionOnScriptError(false).setHTTPProxy("proxy",8080,Nil)
+  private val conf = MaeveConf().setJavaScriptEnabled(false).setThrowExceptionOnScriptError(false)
 
 
   def main(args : Array[String]): Unit = {
