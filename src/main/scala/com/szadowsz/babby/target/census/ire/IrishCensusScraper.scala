@@ -45,7 +45,7 @@ class IrishCensusScraper(
     val actions = new WaitExecutor(waitTime)
 
     extractor = new IrishCensusPeopleDataExtractor(completedPageCount, 0, fileLimit)
-    val instruction = MaeveInstruction(name, target, actions, extractor, s"./data/census/ireland/$year/", true, true)
+    val instruction = MaeveInstruction(name, target, actions, extractor, s"./data/census/ireland/$year/", true, true,true)
     instruction.applyLinkHistory(history)
   }
 

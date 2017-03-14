@@ -2,14 +2,15 @@
 group 'com.szadowsz'
 version '0.1.0'
 
+// IntelliJ is the primary development medium, so it makes sense to add explicit support for it in gradle
+apply plugin: 'idea'
+
+// Add necessary language support
 apply plugin: 'java'
 apply plugin: 'scala'
-// IntelliJ is the primary development medium, so it makes sense to add explicit support for all the sub-modules
-apply plugin: 'idea'
 
     ext {
         scalaVersion = '2.11.8'
-        sparkVersion = '2.0.0'
         scalaTestVersion = '2.2.4'
         slf4jVersion = '1.7.12'
         junitVersion = '4.11'
@@ -24,9 +25,12 @@ apply plugin: 'idea'
         }
     }
 
-    repositories {
-        mavenCentral()
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://dl.bintray.com/zakski/default'
     }
+}
 
 
 /*
@@ -34,8 +38,8 @@ apply plugin: 'idea'
  * slf4j logger, scalatest and junit.
  */
 dependencies {
-    compile project(':module/phobail')
-    compile project(':module/maeve')
+    compile group: 'com.szadowsz', name: 'an-phobail', version: '0.0.1'
+    compile group: 'com.szadowsz', name: 'maeve', version: '0.0.1'
 
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: seleniumVersion
 

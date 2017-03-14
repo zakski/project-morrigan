@@ -1,6 +1,1 @@
-rootProject.name = 'project-babby'
-
-include 'module/phobail'
-project(':module/phobail').projectDir = new File('./module/maeve/module/phobail/')
-
-include 'module/maeve'
+rootProject.name = 'babby'
