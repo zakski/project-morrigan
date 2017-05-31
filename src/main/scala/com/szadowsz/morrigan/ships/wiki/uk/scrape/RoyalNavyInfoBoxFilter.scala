@@ -12,8 +12,7 @@ import scala.collection.JavaConverters._
   */
 class RoyalNavyInfoBoxFilter extends JsoupExtractor {
   private val REDIRECT_PATH: String = "body div#content div#contentSub span.mw-redirectedfrom"
-  private val INFOBOX_PATH: String = "body div#content table.infobox"
-  private val INFO_ELEMENT_PATH: String = "tr > td + td"
+  private val INFOBOX_PATH: String = "body div#content table.infobox > tbody > tr"
 
   val headers: List[String] = List(
     "Name:",
@@ -137,12 +136,12 @@ class RoyalNavyInfoBoxFilter extends JsoupExtractor {
         val isRedirected = page.select(REDIRECT_PATH).asScala.nonEmpty || queryUrl != returnedUrl
         val fragment = returnedUrl.fragmentOpt
 
-        val infobox = page.select(INFOBOX_PATH).asScala.headOption
+        val infoMap = page.select(INFOBOX_PATH).asScala.filter(r => r.children().size() == 2).map(r => (r.child(0).text(),r.child(1).text())).toMap.filterKeys(headers.contains)
 
-        val infoMap = infobox.map { case box =>
-          val elements = box.select(INFO_ELEMENT_PATH).asScala.map(e => (e.previousElementSibling().text(), e.text()))
-          elements.toMap.filterKeys(headers.contains)
-        }.getOrElse(Map())
+//    val infoMap = infobox.map { case box =>
+//          val elements = box.select(INFO_ELEMENT_PATH).asScala.map(e => (e.previousElementSibling().text(), e.text()))
+//          elements.toMap.filterKeys(headers.contains)
+//        }.getOrElse(Map())
 
         ships = ships :+ (infoMap + ("url_redirected" -> isRedirected) + ("url_fragment" -> fragment.getOrElse("")))
   }

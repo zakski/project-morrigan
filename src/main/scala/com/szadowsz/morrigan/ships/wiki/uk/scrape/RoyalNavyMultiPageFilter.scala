@@ -15,7 +15,7 @@ class RoyalNavyMultiPageFilter extends JsoupExtractor {
   private val INFOBOX_PATH: String = "body div#content table.infobox"
   private val SHIP_INSTANCE_PATH: String = "body div.mw-content-ltr > ul > li , body div.mw-content-ltr > dl > dd"
 
-  var ships : List[List[(Option[Uri], Boolean, Boolean, Boolean, String)]] = List()
+  var ships : List[List[(Option[String], Boolean, Boolean, Boolean, String)]] = List()
 
   override def extract(queryUrl: Uri, returnedUrl: Uri, inst: MaeveInstruction[_], page: Document): Unit = {
     val isRedirected = page.select(REDIRECT_PATH).asScala.nonEmpty
@@ -23,12 +23,12 @@ class RoyalNavyMultiPageFilter extends JsoupExtractor {
     val instances = if (!hasInfo) page.select(SHIP_INSTANCE_PATH).asScala.toList else List()
 
     val curr = if (instances.isEmpty) {
-      List((Some(queryUrl), isRedirected, hasInfo, true, ""))
+      List((Some(queryUrl.path), isRedirected, hasInfo, true, ""))
     } else {
-      instances.map(ins => {
-        val nurl = ins.select("a").asScala.find(e => e.attr("Title").contains("HMS")).map(l => Uri(l.attr("href")))
+      instances.filter(ins => ins.select("a").asScala.exists(e => e.attr("Title").contains("HMS"))).map(ins => {
+        val nurl = ins.select("a").asScala.find(e => e.attr("Title").contains("HMS")).map(l => l.attr("href"))
         val desc = ins.text()
-        val exists = nurl.exists(!_.containsQueryKey("redlink"))
+        val exists = nurl.exists(!Uri(_).containsQueryKey("redlink"))
         (nurl, true, true, exists, desc)
       })
     }

@@ -27,7 +27,7 @@ class UboatNetShipFilter extends JsoupExtractor {
       info("Type"),
       info("Navy"),
       info("Class"),
-      classID,
+     queryUrl.withPath(classID).toString(),
       info("Pennant"),
       info("Built by"),
       info("Laid down"),

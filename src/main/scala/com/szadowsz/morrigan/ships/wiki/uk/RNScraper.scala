@@ -27,6 +27,7 @@ object RNScraper {
 
     val links = urlInst.extractor.asInstanceOf[RoyalNavyUrlFilter].links
     val (shipsWithPages, unWrittenPages) = links.partition { case (name, link) => !Uri(link).containsQueryKey("redlink") }
+    val unWrittenPagesMap = unWrittenPages.map(tuple => (tuple._1, Map[String, Any]()))
 
     val rnMultiTarg = RNUrlTargetting.createRelativeProfile(shipsWithPages.map(_._2))
     val multiInst = RNUrlTargetting.createInstruction(rnMultiTarg, new RoyalNavyMultiPageFilter)
@@ -34,24 +35,23 @@ object RNScraper {
     driver.scrapeUsingInstruction(multiInst)
     val pageInfo = multiInst.extractor.asInstanceOf[RoyalNavyMultiPageFilter].ships
 
-    val multiPages = shipsWithPages.zip(pageInfo).flatMap { case ((name, _), instances) =>
-      instances.map { case (uri, redirect, info, exists, desc) =>
-        (name, uri, redirect, info, exists, desc)
-      }
+    val multiPageList = shipsWithPages.zip(pageInfo)
+    val pageList = multiPageList.flatMap{ case ((name, _), instances) =>
+        instances.map{case (uri, redirect, info, exists, desc) => (name,uri,redirect,info,exists,desc) }
     }
+    val (shipsWithSinglePages, unWrittenSinglePages) = pageList.partition { case (_, _, _, _, exists, _) => exists }
+    val unWrittenPagesDescMap = unWrittenSinglePages.map(tuple => (tuple._1, Map[String, Any]("line_desc" -> tuple._6)))
 
-    val (shipsWithSinglePages, unWrittenSinglePages) = multiPages.partition { case (_, _, _, _, exists, _) => exists }
-    val rnSingTarg = RNUrlTargetting.createRelativeProfile(shipsWithSinglePages.map(_._2.get.toString()))
+    val rnSingTarg = RNUrlTargetting.createRelativeProfile(shipsWithSinglePages.map(_._2.get))
     val filter = new RoyalNavyInfoBoxFilter
-    val singInst = RNUrlTargetting.createInstruction(rnMultiTarg, filter)
+    val singInst = RNUrlTargetting.createInstruction(rnSingTarg, filter)
     driver.scrapeUsingInstruction(singInst)
 
-    val info = filter.ships
-    val results = unWrittenPages.map(tuple => (tuple._1, Map[String, Any]())) ++
-          unWrittenSinglePages.map(tuple => (tuple._1, Map[String, Any]("line_desc" -> tuple._6))) ++
-          shipsWithSinglePages.zip(info).map(tuple => (tuple._1._1, tuple._2))
+    val singlePageResults = shipsWithSinglePages.map(_._1).zip(filter.ships)
 
-    val rows = results.map(x => x._1 +: filter.headers.map(x._2.getOrElse(_, "").toString))
+
+    val results = unWrittenPagesMap ++ unWrittenPagesDescMap ++ singlePageResults
+    val rows = results.map(x => x._1 +: filter.headers.map(x._2.getOrElse(_, "").toString)).sortBy(_.head)
     val listWriter = new CsvWriter("./data/wiki/shipsRN.csv","UTF-8",false,CsvPreference.STANDARD_PREFERENCE)
     rows.foreach(r => listWriter.write(r:_*))
     listWriter.close()

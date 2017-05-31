@@ -15,7 +15,7 @@ object UboatNetShipTargetting extends JsoupPathTargetting {
 
 
 
-  override val baseUrl = Uri("http://uboat.net/allies/warships/")
+  override val baseUrl = Uri("http://uboat.net/allies/warships")
 
 
   override val urlPaths: Seq[String] = buildShipList()
