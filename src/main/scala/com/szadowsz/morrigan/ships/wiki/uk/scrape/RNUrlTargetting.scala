@@ -32,7 +32,7 @@ object RNUrlTargetting extends JsoupPathTargetting{
       "/wiki/List_of_ship_names_of_the_Royal_Navy_(U-Z)"
     )
 
-  override val dPath: String = "./data/wiki/"
+  override val dPath: String = "./data/wiki/rn/"
 
   override val filter: JsoupExtractor = new RoyalNavyUrlFilter
 

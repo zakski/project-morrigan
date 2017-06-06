@@ -13,7 +13,6 @@ object WikiRegListScraper {
   def main(args: Array[String]): Unit = {
     val conf = MaeveConf()
       .setJavaScriptEnabled(false)
-      .setHTTPProxy("proxy", 8080, Nil)
       .setThrowExceptionOnScriptError(false)
       .setPrintContentOnFailingStatusCode(false)
 

@@ -17,7 +17,6 @@ object RNScraper {
   def main(args: Array[String]): Unit = {
     val conf = MaeveConf()
       .setJavaScriptEnabled(true)
-      .setHTTPProxy("proxy", 8080, Nil)
       .setThrowExceptionOnScriptError(false)
       .setPrintContentOnFailingStatusCode(false)
 
